@@ -9,18 +9,25 @@ import {
 } from 'react-native';
 import { Player, Recorder } from '@react-native-community/audio-toolkit';
 
+
 function RecordView({ navigate }) {
 	const [fileName, setFilename] = useState('record.mp4');
-	const [player, setPlayer] = useState(Player ? Player : null);
-	const [recorder, setRecorder] = useState(Recorder ? Recorder : null);
+	
+	const [player, setPlayer] = useState( new Player);
+	if (player) {
+		player
+	}
+	const [recorder, setRecorder] = useState(
+		new Recorder(fileName, {
+			bitrate: 256000,
+			quality: 'max',
+		})
+	);
 
-	const [errorMessage, setErrorMessage] = useState('');
-    const [micPermissionStatus, setMicPermissionStatus] = useState('neutral');
-    
-    //buttons
-    const [buttons, setButtons] = useState({
-        recordButton: recorder && recorder.isRecording ? 'Stop' : 'Record',
-    })
+	//buttons
+	const [buttons, setButtons] = useState({
+		recordButton: recorder && recorder.isRecording ? 'Stop' : 'Record',
+	});
 
 	async function requestRecordPermission() {
 		try {
@@ -46,13 +53,13 @@ function RecordView({ navigate }) {
 		}
 	}
 
-	const activateMicrophonePermission = () => {
+	const activateMicrophonePermissionRequest = () => {
 		let recordRequest =
 			Platform.OS === 'android'
-				? requestRecordPermission
+				? requestRecordPermission()
 				: new Promise((resolve, reject) => resolve(true));
 
-		recordAudioRequest.then((permitted) => {
+		recordRequest.then((permitted) => {
 			if (!permitted) {
 				setMicPermissionStatus('denied');
 			}
@@ -94,19 +101,19 @@ function RecordView({ navigate }) {
 		);
 
 		//make necessary state updates
-    }
-    const playOrPause = () =>{
-        player.playPause((error, paused)=>{
-            if(err){
-                setErrorMessage(error.message)
-            }
+	}
+	const playOrPause = () => {
+		player.playPause((error, paused) => {
+			if (err) {
+				setErrorMessage(error.message);
+			}
 
-            //make necessary state updates
-        })
-    }
-    
+			//make necessary state updates
+		});
+	};
+
 	const toggleRecord = () => {
-		if (PermissionStatus === 'denied') {
+		if (micPermissionStatus === 'denied') {
 			setErrorMessage('Permission to Record Audio has been denied');
 			return;
 		}
@@ -114,22 +121,30 @@ function RecordView({ navigate }) {
 			if (error) {
 				setErrorMessage(error.message);
 			} else if (stopped) {
-                playerReload();
-                recorderReload();
+				playerReload();
+				recorderReload();
 			}
 		});
-    };
-    
+	};
+
 	useEffect(() => {
 		activateMicrophonePermissionRequest();
 	}, []);
 
 	return (
 		<SafeAreaView style={styles.container}>
-            <Button title='play' onPress={()=>{
-                playOrPause()
-            }}/>
-			<Button title={buttons.recordButton} onPress={() => { toggleRecord()}} />
+			<Button
+				title='play'
+				onPress={() => {
+					playOrPause();
+				}}
+			/>
+			<Button
+				title={buttons.recordButton}
+				onPress={() => {
+					toggleRecord();
+				}}
+			/>
 		</SafeAreaView>
 	);
 }
