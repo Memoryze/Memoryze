@@ -15,6 +15,15 @@ function RecordView({ navigate }) {
 	const [RecordPermissionGranted, setRecordPermissionGranted] = useState(false);
 	const [player, setPlayer] = useState(new Audio.Sound());
 	const [recorder, setRecorder] = useState(new Audio.Recording());
+	const [recording, setRecording] = useState(null);
+	const [initialStatus, setInitialStatus] = useState({
+		shouldPlay: false,
+		rate: 1.0,
+		shouldCorrectPitch: true,
+		volume: 5.0,
+		isMuted: false,
+		isLooping: false,
+	});
 
 	const [buttons, setButtons] = useState('Record');
 	function play() {
@@ -23,14 +32,17 @@ function RecordView({ navigate }) {
 			if (res.isLoaded) {
 				player.replayAsync();
 			} else {
-				player.loadAsync(require('../assets/muse.aiff')).then((res) => {
-					player.playAsync().then((res) => {
-						console.log(res);
+				player
+					.loadAsync(require('../assets/muse.aiff'), initialStatus)
+					.then((res) => {
+						player.playAsync().then((res) => {
+							console.log(res);
+						});
 					});
-				});
 			}
 		});
 	}
+	
 	function record() {
 		recorder
 			.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY)
@@ -42,22 +54,34 @@ function RecordView({ navigate }) {
 	}
 
 	function playRecording() {
-		recorder.createNewLoadedSoundAsync().then((res) => {
-			res.sound.playAsync();
-			res.sound.setVolumeAsync(5)
-			console.log('playing recording');
+		recording.getStatusAsync().then((res) => {
+			console.log(res);
+			if (res.isLoaded) {
+				recording.replayAsync();
+			} else {
+				recorder.createNewLoadedSoundAsync(initialStatus).then((res) => {
+					setRecording(res.sound);
+					recording.playAsync();
+					// recording.setVolumeAsync(5)
+					console.log('playing recording');
+				});
+			}
 		});
 	}
+
 	function stopRecording() {
 		recorder.stopAndUnloadAsync();
-		console.log('stopping recording')
+		console.log('stopping recording');
 	}
 
 	useEffect(() => {
 		Audio.requestPermissionsAsync().then((permissionResponse) => {
 			setRecordPermissionGranted(permissionResponse.granted);
 		});
-		Audio.setAudioModeAsync({allowsRecordingIOS:true, playsInSilentModeIOS:true})
+		Audio.setAudioModeAsync({
+			allowsRecordingIOS: true,
+			playsInSilentModeIOS: true,
+		});
 		player.setVolumeAsync(5);
 	}, []);
 
