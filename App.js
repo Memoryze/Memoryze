@@ -7,7 +7,7 @@ import Welcome from './app/screens/Welcome';
 import LoginView from './app/screens/LoginView';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import RecordView from './RecordView';
+import RecordView from './app/screens/RecordView';
 
 
 const Stack = createStackNavigator();
