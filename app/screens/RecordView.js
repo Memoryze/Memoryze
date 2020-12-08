@@ -15,7 +15,7 @@ function RecordView({ navigate }) {
 	const [RecordPermissionGranted, setRecordPermissionGranted] = useState(false);
 	const [player, setPlayer] = useState(new Audio.Sound());
 	const [recorder, setRecorder] = useState(new Audio.Recording());
-	//buttons
+
 	const [buttons, setButtons] = useState('Record');
 	function play() {
 		player.getStatusAsync().then((res) => {
@@ -44,6 +44,7 @@ function RecordView({ navigate }) {
 	function playRecording() {
 		recorder.createNewLoadedSoundAsync().then((res) => {
 			res.sound.playAsync();
+			res.sound.setVolumeAsync(5)
 			console.log('playing recording');
 		});
 	}
@@ -57,6 +58,7 @@ function RecordView({ navigate }) {
 			setRecordPermissionGranted(permissionResponse.granted);
 		});
 		Audio.setAudioModeAsync({allowsRecordingIOS:true, playsInSilentModeIOS:true})
+		player.setVolumeAsync(5);
 	}, []);
 
 	return (
