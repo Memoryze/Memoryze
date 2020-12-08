@@ -12,7 +12,6 @@ import { Audio } from 'expo-av';
 function RecordView({ navigate }) {
 	const [fileName, setFilename] = useState('record.mp4');
 
-	const [RecordPermissionGranted, setRecordPermissionGranted] = useState(false);
 	const [player, setPlayer] = useState(new Audio.Sound());
 	const [recorder, setRecorder] = useState(new Audio.Recording());
 	const [recording, setRecording] = useState(null);
