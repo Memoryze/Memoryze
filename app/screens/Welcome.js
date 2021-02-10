@@ -1,81 +1,20 @@
-import React, { useEffect } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React from 'react';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 
-function Welcome({ navigation }) {
-	function upload(uri, name) {
-		// let url = 'http://localhost:8000/';
-		let url = 'https://memoryze-db.herokuapp.com/recordings/';
-		// let uri = 'app/assets/eminem_lose_yourself.mp3';
-		let uriParts = uri.split('.');
-		let fileType = uriParts[uriParts.length - 1];
-		let formData = new FormData();
-		// /name: `sound.${fileType}`,
-		formData.append('recording', {
-			uri,
-			name: name,
-			type: `audio/x-${fileType}`,
-		});
-		formData.append('title', 'a title');
-		// formData.append('subject', 'a subject');
-		formData.append('tutor_id', 1);
 
-		let options = {
-			method: 'POST',
-			body: formData,
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'multipart/form-data',
-			},
-		};
-		console.log('it did reach here');
-		console.log(uri + '  name: ' + name);
-		fetch(url, options)
-			.then((res) => res.json())
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((error) => console.log(error));
-	}
-	const handleUpload = () => {
-		const options = { type: 'audio/*', copyToCacheDirectory: false };
-		// type either says success or cancel
-		DocumentPicker.getDocumentAsync(options)
-			.then(({ type, uri, name, size }) => {
-				if (type === 'success') {
-					upload(uri, name);
-				} else {
-					console.log(
-						'Sorry Could not upload Type:' +
-							type +
-							' uri: ' +
-							uri +
-							' name ' +
-							name
-					);
-				}
-			})
-			.catch((error) => console.log(error));
-	};
-
+function Welcome({navigation}) {
 	return (
-		<View style={styles.container}> 
-			<TouchableOpacity
-				onPress={() => {
-					navigation.navigate('RecordScreen', { propsToPass: 'Example props' });
-				}}
-				style={styles.button}>
-				<Text style={styles.buttonTitle}>Make a recording</Text>
+		<SafeAreaView style={styles.container}>
+			<Text style={styles.welcomeMessage}>Welcome to Memoryze</Text>
+			<Text style={styles.questionHeaders}>Already have an account?</Text>
+			<TouchableOpacity style={styles.button}>
+				<Text style={styles.buttonTitle}>Sign In</Text>
 			</TouchableOpacity>
-			<TouchableOpacity onPress={handleUpload} style={styles.button}>
-				<Text style={styles.buttonTitle}>Upload an audio</Text>
+			<Text style={styles.questionHeaders}>New here?</Text>
+			<TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('SignUp')}>
+				<Text style={styles.buttonTitle}>Sign Up</Text>
 			</TouchableOpacity>
-			<Text style={styles.temporaryInstructions}>
-				Be Warned, once you select your audio file, it will be automatically
-				uploaded
-			</Text>
-		</View>
+		</SafeAreaView>
 	);
 }
 
@@ -88,24 +27,26 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		width: '100%',
 	},
+	welcomeMessage:{
+		marginBottom:20,
+		fontSize:20,
+		bottom:50
+	},
+	questionHeaders:{
+		fontSize:17,
+	},
 	button: {
-		backgroundColor: 'rgb(5,3,10)',
+		backgroundColor: 'dodgerblue',
+		marginTop:10,
 		marginBottom: 20,
-		padding:24,
+		padding: 8,
 		width: 200,
-		borderRadius:25,
+		borderRadius: 25,
 	},
 	buttonTitle: {
 		color: 'white',
 		fontSize: 18,
 		fontWeight: 'bold',
-		alignSelf:'center'
+		alignSelf: 'center',
 	},
-	temporaryInstructions:{
-		fontSize:20,
-		// fontWeight:'bold',
-		alignSelf:'center',
-		marginHorizontal:20,
-		marginTop:30
-	}
 });
