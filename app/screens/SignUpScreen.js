@@ -1,35 +1,92 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	View,
+	TextInput,
+	TouchableOpacity,
+} from 'react-native';
 
 function SignUpScreen(props) {
-    return (
-			<SafeAreaView style={styles.container}>
-                <Text style={styles.heading}>Sign Up</Text>
-				<TextInput
-					style={styles.inputBox}
-					placeholder='Username'
-					placeholderTextColor='black'
-				/>
-				<TextInput
-					style={styles.inputBox}
-					placeholder='Email'
-					placeholderTextColor='black'
-				/>
-				<TextInput
-					style={styles.inputBox}
-					placeholder='Password'
-					placeholderTextColor='black'
-				/>
-				<TextInput
-					style={styles.inputBox}
-					placeholder='Re-type Password'
-					placeholderTextColor='black'
-				/>
-				<TouchableOpacity style={styles.button}>
-					<Text style={styles.buttonTitle}>Create Account</Text>
-				</TouchableOpacity>
-			</SafeAreaView>
-		);
+	const [userInfo, setUserInfo] = useState({
+		name: '',
+		email: '',
+		password: '',
+		retypePassword: '',
+	});
+	const handleUsernameChange = (username) => {
+		setUserInfo({
+			name: username,
+			email: userInfo.email,
+			password: userInfo.password,
+		});
+	};
+	const handleEmailChange = (email) => {
+		setUserInfo({
+			name: userInfo.name,
+			email: email,
+			password: userInfo.password,
+		});
+	};
+	const handlePasswordChange = (password) => {
+		setUserInfo({
+			name: userInfo.name,
+			email: userInfo.email,
+			password: password,
+		});
+	};
+	const handleRetypePasswordChange = (password) => {
+		setUserInfo({
+			name: userInfo.name,
+			email: userInfo.email,
+			password: userInfo.password,
+			retypePassword: password,
+		});
+	};
+	function makeId() {
+		let text = '';
+		let possible =
+			'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+		for (let i = 0; i < 5; i++) {
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		return text + Math.random().toString(36).substring(1,1);
+	}
+
+	return (
+		<SafeAreaView style={styles.container}>
+			<Text style={styles.heading}>Sign Up</Text>
+			<TextInput
+				style={styles.inputBox}
+				onChangeText={(text) => handleUsernameChange(text)}
+				placeholder='Username'
+				placeholderTextColor='black'
+			/>
+			<TextInput
+				style={styles.inputBox}
+				onChangeText={(text) => handleEmailChange(text)}
+				placeholder='Email'
+				placeholderTextColor='black'
+			/>
+			<TextInput
+				style={styles.inputBox}
+				onChangeText={(text) => handlePasswordChange(text)}
+				placeholder='Password'
+				placeholderTextColor='black'
+			/>
+			<TextInput
+				style={styles.inputBox}
+				onChangeText={(text) => handleRetypePasswordChange(text)}
+				placeholder='Re-type Password'
+				placeholderTextColor='black'
+			/>
+			<TouchableOpacity style={styles.button}>
+				<Text style={styles.buttonTitle}>Create Account</Text>
+			</TouchableOpacity>
+		</SafeAreaView>
+	);
 }
 
 export default SignUpScreen;
@@ -44,8 +101,8 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	heading: {
-        fontSize: 20,
-        marginBottom:15,
+		fontSize: 20,
+		marginBottom: 15,
 	},
 	inputBox: {
 		borderColor: 'black',
