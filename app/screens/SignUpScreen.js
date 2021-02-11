@@ -14,7 +14,6 @@ function SignUpScreen(props) {
 		name: '',
 		email: '',
 		password: '',
-		retypePassword: '',
 	});
 	const [passwordSecurityProps, setPasswordSecurityProps] = useState({
 		iconName: 'eye',
@@ -46,7 +45,7 @@ function SignUpScreen(props) {
 		setPasswordSecurityProps({
 			iconName: newIconName,
 			secureTextEntry: !passwordSecurityProps.secureTextEntry,
-		});
+        })
 	};
 	function makeCode() {
 		let text = '';
@@ -63,9 +62,7 @@ function SignUpScreen(props) {
 		let url = 'http://localhost:8000/users/create_user/' + key;
 		let verificationCode = makeCode();
 		body = {
-			name: '',
-			email: '',
-			password: '',
+			...userInfo,
 			code: verificationCode,
 			is_learner: true,
 		};
@@ -91,6 +88,7 @@ function SignUpScreen(props) {
 				<TextInput
 					style={{ flex: 1 }}
 					onChangeText={(text) => handleUsernameChange(text)}
+					value={userInfo.name}
 					placeholder='Username'
 					placeholderTextColor='black'
 				/>
@@ -100,6 +98,7 @@ function SignUpScreen(props) {
 				<TextInput
 					style={{ flex: 1 }}
 					onChangeText={(text) => handleEmailChange(text)}
+					value={userInfo.email}
 					placeholder='Email'
 					placeholderTextColor='black'
 				/>
@@ -110,6 +109,7 @@ function SignUpScreen(props) {
 					style={styles.inputBox}
 					onChangeText={(text) => handlePasswordChange(text)}
 					placeholder='Password'
+					value={userInfo.password}
 					secureTextEntry={passwordSecurityProps.secureTextEntry}
 					placeholderTextColor='black'
 				/>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		flexDirection: 'row',
 		width: '70%',
-		marginBottom: 20,
+		marginBottom: 25,
 	},
 	button: {
 		backgroundColor: 'dodgerblue',
