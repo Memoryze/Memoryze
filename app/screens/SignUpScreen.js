@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import {
 	SafeAreaView,
 	StyleSheet,
@@ -16,7 +16,7 @@ function SignUpScreen(props) {
 		password: '',
 	});
 	const [passwordSecurityProps, setPasswordSecurityProps] = useState({
-		iconName: 'eye',
+		iconName: 'md-eye',
 		secureTextEntry: true,
 	});
 	const handleUsernameChange = (username) => {
@@ -41,11 +41,13 @@ function SignUpScreen(props) {
 		});
 	};
 	const onIconPress = () => {
-		let newIconName = passwordSecurityProps.secureTextEntry ? 'eye-off' : 'eye';
+		let newIconName = passwordSecurityProps.secureTextEntry
+			? 'md-eye-off'
+			: 'md-eye';
 		setPasswordSecurityProps({
 			iconName: newIconName,
 			secureTextEntry: !passwordSecurityProps.secureTextEntry,
-        })
+		});
 	};
 	function makeCode() {
 		let text = '';
@@ -58,27 +60,54 @@ function SignUpScreen(props) {
 		return text + Math.random().toString(36).substring(1, 1);
 	}
 	const handleSubmit = () => {
-		const key = process.env.REACT_APP_MYAPI_KEY;
+		const key = 'key';
 		let url = 'http://localhost:8000/users/create_user/' + key;
 		let verificationCode = makeCode();
-		body = {
-			...userInfo,
+		let body = {
+			name: userInfo.name,
+			email: userInfo.email,
+			password: userInfo.password,
 			code: verificationCode,
-			is_learner: true,
 		};
-		fetch(url, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(body),
-		})
-			.then((res) => res.json())
-			.then((res) => {
-				//get the users's id from the response
-				//the id would be passed through the navigator to the next
-				console.log(res);
-			});
+		body['is_verified'] = true;
+
+		// fetch(url, {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// 	body: JSON.stringify(body),
+		// })
+		// 	.then((res) => res.json())
+		// 	.then((res) => {
+		// 		//get the users's id from the response
+		// 		//the id would be passed through the navigator to the next
+		// 		console.log(res);
+		// 	});
+
+		// fetch(
+		// 	'https://6hfzcyy43e.execute-api.us-east-2.amazonaws.com/default/API_ACCESS?name=Memoryze'
+		// )
+		// 	.then((res) => res.json())
+		// 	.then((res) => {
+		// 		//get the users's id from the response
+		// 		//the id would be passed through the navigator to the next
+		// 		console.log(res);
+		// 	});
+
+		// fetch(url, {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// 	body: JSON.stringify({ user_id: 43, code: verificationCode }),
+		// })
+		// 	.then((res) => res.json())
+		// 	.then((res) => {
+		// 		//get the users's id from the response
+		// 		//the id would be passed through the navigator to the next
+		// 		console.log(res);
+		// 	});
 	};
 
 	return (
@@ -110,11 +139,15 @@ function SignUpScreen(props) {
 					onChangeText={(text) => handlePasswordChange(text)}
 					placeholder='Password'
 					value={userInfo.password}
-					secureTextEntry={passwordSecurityProps.secureTextEntry}
+					secureTextEntry={true}
 					placeholderTextColor='black'
 				/>
 				<TouchableOpacity onPress={onIconPress}>
-					<Icon name={passwordSecurityProps.iconName} size={20} />
+					<Ionicons
+						name={passwordSecurityProps.iconName}
+						size={24}
+						color='black'
+					/>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity style={styles.button} onPress={handleSubmit}>
