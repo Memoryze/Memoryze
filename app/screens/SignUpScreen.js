@@ -139,7 +139,7 @@ function SignUpScreen(props) {
 					onChangeText={(text) => handlePasswordChange(text)}
 					placeholder='Password'
 					value={userInfo.password}
-					secureTextEntry={true}
+					secureTextEntry={passwordSecurityProps.secureTextEntry}
 					placeholderTextColor='black'
 				/>
 				<TouchableOpacity onPress={onIconPress}>
