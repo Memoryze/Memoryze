@@ -29,7 +29,6 @@ function DemoScreen({ navigation }) {
 				'Content-Type': 'multipart/form-data',
 			},
 		};
-		console.log('it did reach here');
 		console.log(uri + '  name: ' + name);
 		fetch(url, options)
 			.then((res) => res.json())

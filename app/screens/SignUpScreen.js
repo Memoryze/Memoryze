@@ -14,6 +14,7 @@ function SignUpScreen(props) {
 		name: '',
 		email: '',
 		password: '',
+		retypePassword: '',
 	});
 	const handleUsernameChange = (username) => {
 		setUserInfo({
@@ -36,10 +37,24 @@ function SignUpScreen(props) {
 			password: password,
 		});
 	};
+	const handleRetypePasswordChange = (password) => {
+		setUserInfo({
+			name: userInfo.name,
+			email: userInfo.email,
+			password: userInfo.password,
+			retypePassword: password,
+		});
+	};
 	
 	const handleSubmit = () => {
 		const key = 'key';
 		let url = 'http://localhost:8000/users/create_user/' + key;
+		let body = {
+			name: userInfo.name,
+			email: userInfo.email,
+			password: userInfo.password
+		}
+
 		fetch(url, {
 			method: 'POST',
 			headers: {
@@ -61,7 +76,7 @@ function SignUpScreen(props) {
 			<Text style={styles.heading}>Sign Up</Text>
 			<View style={styles.inputBoxContainer}>
 				<TextInput
-					style={{ flex: 1 }}
+					style={styles.inputBox}
 					onChangeText={(text) => handleUsernameChange(text)}
 					value={userInfo.name}
 					placeholder='Username'
@@ -71,7 +86,7 @@ function SignUpScreen(props) {
 
 			<View style={styles.inputBoxContainer}>
 				<TextInput
-					style={{ flex: 1 }}
+					style={styles.inputBox}
 					onChangeText={(text) => handleEmailChange(text)}
 					value={userInfo.email}
 					placeholder='Email'
@@ -85,16 +100,18 @@ function SignUpScreen(props) {
 					onChangeText={(text) => handlePasswordChange(text)}
 					placeholder='Password'
 					value={userInfo.password}
-					secureTextEntry={passwordSecurityProps.secureTextEntry}
 					placeholderTextColor='black'
 				/>
-				<TouchableOpacity onPress={onIconPress}>
-					<Ionicons
-						name={passwordSecurityProps.iconName}
-						size={24}
-						color='black'
-					/>
-				</TouchableOpacity>
+			</View>
+
+			<View style={styles.inputBoxContainer}>
+				<TextInput
+					style={styles.inputBox}
+					onChangeText={(text) => handleRetypePasswordChange(text)}
+					placeholder='Confirm Password'
+					value={userInfo.password}
+					placeholderTextColor='black'
+				/>
 			</View>
 			<TouchableOpacity style={styles.button} onPress={handleSubmit}>
 				<Text style={styles.buttonTitle}>Create Account</Text>
