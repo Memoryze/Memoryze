@@ -15,10 +15,6 @@ function SignUpScreen(props) {
 		email: '',
 		password: '',
 	});
-	const [passwordSecurityProps, setPasswordSecurityProps] = useState({
-		iconName: 'md-eye',
-		secureTextEntry: true,
-	});
 	const handleUsernameChange = (username) => {
 		setUserInfo({
 			name: username,
@@ -40,74 +36,24 @@ function SignUpScreen(props) {
 			password: password,
 		});
 	};
-	const onIconPress = () => {
-		let newIconName = passwordSecurityProps.secureTextEntry
-			? 'md-eye-off'
-			: 'md-eye';
-		setPasswordSecurityProps({
-			iconName: newIconName,
-			secureTextEntry: !passwordSecurityProps.secureTextEntry,
-		});
-	};
-	function makeCode() {
-		let text = '';
-		let possible =
-			'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-		for (let i = 0; i < 5; i++) {
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
-		}
-		return text + Math.random().toString(36).substring(1, 1);
-	}
+	
 	const handleSubmit = () => {
 		const key = 'key';
 		let url = 'http://localhost:8000/users/create_user/' + key;
-		let verificationCode = makeCode();
-		let body = {
-			name: userInfo.name,
-			email: userInfo.email,
-			password: userInfo.password,
-			code: verificationCode,
-		};
-		body['is_verified'] = true;
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(body),
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				//get the users's id from the response
+				//the id would be passed through the navigator to the next
+				console.log(res);
+			});
 
-		// fetch(url, {
-		// 	method: 'POST',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// 	body: JSON.stringify(body),
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((res) => {
-		// 		//get the users's id from the response
-		// 		//the id would be passed through the navigator to the next
-		// 		console.log(res);
-		// 	});
-
-		// fetch(
-		// 	'https://6hfzcyy43e.execute-api.us-east-2.amazonaws.com/default/API_ACCESS?name=Memoryze'
-		// )
-		// 	.then((res) => res.json())
-		// 	.then((res) => {
-		// 		//get the users's id from the response
-		// 		//the id would be passed through the navigator to the next
-		// 		console.log(res);
-		// 	});
-
-		// fetch(url, {
-		// 	method: 'POST',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// 	body: JSON.stringify({ user_id: 43, code: verificationCode }),
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((res) => {
-		// 		//get the users's id from the response
-		// 		//the id would be passed through the navigator to the next
-		// 		console.log(res);
-		// 	});
 	};
 
 	return (
